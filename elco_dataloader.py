@@ -1,7 +1,7 @@
 import pandas as pd
 from torch.utils.data import Dataset, DataLoader
 from sklearn.model_selection import train_test_split
-from itertools import chain
+from typing import Optional, List, Dict, Tuple
 
 """
     Class for loading the Elco dataset.
@@ -19,7 +19,7 @@ class ElcoDataset(Dataset):
             Each label has 7,8, or 9 rows, each row has a different list of emojis
             Emoji and emoji_list columns hold the same information, but in different formats
     """
-    def __init__(self, data, labels, transform=None): 
+    def __init__(self, data: Dict, labels: List, transform=None): 
         self.transform = transform
         self.labels = labels
         self.data = data
@@ -27,7 +27,7 @@ class ElcoDataset(Dataset):
     def __len__(self) -> int:
         return len(self.data)
     
-    def __getitem__(self, idx) -> tuple:
+    def __getitem__(self, idx: int) -> Tuple(Dict, str):
         label = self.labels[idx]
         data = self.data[label]
         
@@ -35,14 +35,16 @@ class ElcoDataset(Dataset):
             data = self.transform(data)
         return data, label
     
-    def get_data(self) -> dict:
+    def get_data(self) -> Dict:
         return self.data
     
-    def get_labels(self) -> list:
+    def get_labels(self) -> List:
         return self.labels
 
 class ElcoDataLoader:
-    def __init__(self, csv_file: str, batch_size=1, shuffle=True, num_workers=0, 
+    def __init__(self, csv_file: str, batch_size: Optional[int]=1, 
+                 shuffle: Optional[bool] =True, 
+                 num_workers: Optional[int]=0, 
                  transform=None, test_size=0.2):
         self.train, self.test = ElcoDataset(csv_file, transform=transform, 
                                             test_size=test_size).get_data()
@@ -54,17 +56,17 @@ class ElcoDataLoader:
     def get_dataset(self) -> ElcoDataset:
         return self.dataset
     
-    def get_labels(self) -> list:
+    def get_labels(self) -> List:
         return self.dataset.get_labels()
     
-    def get_data(self) -> dict:
+    def get_data(self) -> Dict:
         return self.dataset.get_data()
     
     def get_data_by_label(self, label) -> dict:
         return self.dataset.get_data()[label]
 
 def get_loaders(csv_file: str, batch_size=1, shuffle=True, num_workers=0, 
-                transform=None, test_size=0.2):
+                transform=None, test_size=0.2) -> Tuple(DataLoader, DataLoader):
     """
         Args:
             csv_file (string): Path to the csv file with annotations.
