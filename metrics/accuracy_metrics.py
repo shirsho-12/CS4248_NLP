@@ -1,7 +1,14 @@
 
 # TODO: Add imports here
 
-class Metrics:
+"""
+Metrics class to calculate and store metrics for a given model
+    @param rank_scores: A tuple of tuples containing the score according to the 
+                        similarity metric and the actual rank of the emoji sequence
+                        i.e. ((score, rank), (score, rank), ...)
+    @param y: The concept of emoji sequence
+"""
+class AccuracyMetrics:
     def __init__(self):
         self.metrics = {}
 
@@ -15,48 +22,48 @@ class Metrics:
     - Hit Rate
     """
 
-    def accuracy(self):
+    def accuracy(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['accuracy'] = None
         return self.metrics['accuracy']
 
-    def precision_recall_f1(self):
+    def precision_recall_f1(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['precision'] = None
         self.metrics['recall'] = None
         self.metrics['f1'] = None
         return self.metrics['precision'], self.metrics['recall'], self.metrics['f1']
 
-    def roc_auc(self):
+    def roc_auc(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['roc_auc'] = None
         return self.metrics['roc_auc']
 
-    def mrr(self):
+    def mrr(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['mrr'] = None
         return self.metrics['mrr']
 
-    def precision_at_k(self):
+    def precision_at_k(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['precision_at_k'] = None
         return self.metrics['precision_at_k']
     
-    def hit_rate(self):
+    def hit_rate(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['hit_rate'] = None
         return self.metrics['hit_rate']
 
-    def confusion_matrix(self):
+    def confusion_matrix(self, rank_scores, y):
         # TODO: Add functionality
         self.metrics['confusion_matrix'] = None
         return self.metrics['confusion_matrix']
 
-    def plot_roc_auc(self):
+    def plot_roc_auc(self, rank_scores, y):
         # TODO: Add plot
         pass
 
-    def plot_confusion_matrix(self):
+    def plot_confusion_matrix(self, rank_scores, y):
         # TODO: Add plot
         pass
 

@@ -27,10 +27,20 @@ class ElcoDataset(Dataset):
     def __len__(self) -> int:
         return len(self.data)
     
-    def __getitem__(self, idx: int) -> Tuple(Dict, str):
+    def __getitem__(self, idx: int) -> Tuple[Dict, str]:
         label = self.labels[idx]
         data = self.data[label]
         
+        for key, values in data.items():
+            arr = []
+            if isinstance(values, list):
+                for value in values:
+                    arr.append(value)
+                data[key] = arr
+            else:
+                data[key] = [values]
+            data[key].append(" ".join(data[key]))
+
         if self.transform:
             data = self.transform(data)
         return data, label
@@ -66,7 +76,7 @@ class ElcoDataLoader:
         return self.dataset.get_data()[label]
 
 def get_loaders(csv_file: str, batch_size=1, shuffle=True, num_workers=0, 
-                transform=None, test_size=0.2) -> Tuple(DataLoader, DataLoader):
+                transform=None, test_size=0.2) -> Tuple[DataLoader, DataLoader]:
     """
         Args:
             csv_file (string): Path to the csv file with annotations.
