@@ -22,9 +22,12 @@ class AccuracyMetrics:
     - Hit Rate
     """
 
-    def accuracy(self, rank_scores, y):
-        # TODO: Add functionality
-        self.metrics['accuracy'] = None
+    def accuracy(self, rank_scores):
+        correct = 0
+        for i in range(len(rank_scores)):
+            if rank_scores[i][1] == i:
+                correct += 1
+        self.metrics['accuracy'] = correct / len(rank_scores)
         return self.metrics['accuracy']
 
     def precision_recall_f1(self, rank_scores, y):

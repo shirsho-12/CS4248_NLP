@@ -1,6 +1,8 @@
 import torch 
+from itertools import chain
+from tqdm import tqdm
 
-class UnsupervisedBaseline:
+class UnsupervisedBaselineTrainer:
     def __init__(self, model, data_loader, similarity_metric, accuracy_metric):
         self.model = model
         self.data_loader = data_loader
@@ -16,15 +18,14 @@ class UnsupervisedBaseline:
 
     def test(self):
         accuracy = 0
-        for x, y in self.data_loader:
-            y = y.to(self.device)
-            rank_scores = ()
+        for x, y in tqdm(self.data_loader):
+            y = y[0]
+            rank_scores = []
+            y_score = self.model(y)
             for rank, sentences in x.items():
-                sentences = sentences.to(self.device)
-                embeddings = self.model(sentences)
-                rank_scores += (self.similarity_metric(embeddings), rank)
+                sentences = list(chain(*sentences))
+                embeddings = self.model(sentences).mean(axis=0) # simple mean
+                rank_scores.append((self.similarity_metric(embeddings, y_score).cpu().detach().numpy()[0], rank))
             sorted_rank_scores = sorted(rank_scores, key=lambda x: x[0], reverse=True)
-            accuracy += self.accuracy_metric(sorted_rank_scores, y)
+            accuracy += self.accuracy_metric(sorted_rank_scores)
         return accuracy / len(self.data_loader)
-
-

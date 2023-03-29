@@ -2,7 +2,9 @@ import pandas as pd
 from torch.utils.data import Dataset, DataLoader
 from sklearn.model_selection import train_test_split
 from typing import Optional, List, Dict, Tuple
+import torch 
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 """
     Class for loading the Elco dataset.
     The dataset is a csv file with the following format:
@@ -44,7 +46,7 @@ class ElcoDataset(Dataset):
         if self.transform:
             data = self.transform(data)
         return data, label
-    
+
     def get_data(self) -> Dict:
         return self.data
     
@@ -88,6 +90,7 @@ def get_loaders(csv_file: str, batch_size=1, shuffle=True, num_workers=0,
         
         Notes:
             Each emoji in the dataloader is a tuple 
+            The ranking of the emojis is an assumption following the csv file
         e.g. 
         [{
             0: [('shorts',), ('electric plug',)],
