@@ -44,3 +44,18 @@ class EucledianDistance(SimilarityMetrics):
         if y_embedding.ndim == 1:
             y_embedding = y_embedding.unsqueeze(0)
         return -super().__call__(x_embedding, y_embedding)
+
+class JaccardSimilarity(SimilarityMetrics):
+    def __init__(self):
+        pass
+
+    def __call__(self, x_embedding, y_embedding):
+        x_embedding = self.type_check(x_embedding)
+        y_embedding = self.type_check(y_embedding)
+
+        intersection = torch.sum(torch.min(x_embedding, y_embedding))
+        union = torch.sum(torch.max(x_embedding, y_embedding))
+
+        jaccard_similarity = intersection / (union + 1e-8)
+
+        return jaccard_similarity
