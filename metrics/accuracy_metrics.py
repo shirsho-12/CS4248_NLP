@@ -9,7 +9,7 @@ Metrics class to calculate and store metrics for a given model
     @param y: The concept of emoji sequence
 """
 class AccuracyMetrics:
-    def __init__(self):
+    def __init__(self, k=5):
         self.metrics = {}
 
     """
@@ -29,6 +29,15 @@ class AccuracyMetrics:
                 correct += 1
         self.metrics['accuracy'] = correct / len(rank_scores)
         return self.metrics['accuracy']
+    
+    def top_k_accuracy(self, rank_scores):
+        correct = 0
+        k = self.k
+        for i in range(k):
+            if rank_scores[i][1] == i:
+                correct += 1
+        self.metrics['top_k_accuracy'] = correct / k
+        return self.metrics['top_k_accuracy']
 
     def precision_recall_f1(self, rank_scores, y):
         # TODO: Add functionality
